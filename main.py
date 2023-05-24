@@ -82,8 +82,9 @@ class DataTrainingArguments:
     top_p: Optional[float] = field(default=1.0, metadata={"help": "keep the top tokens with cumulative probability >= top_p (nucleus filtering)"})
     do_sample: Optional[bool] = field(default=False, metadata={"help": "# Do sampling (multinomial/neclus sampling)."})
     # For MoE methods
-    mixtures: Optional[int] = field(default=0, metadata={"help": "number of experts in the model"})
-    prompt_nums: Optional[int] = field(default=0, metadata={"help": "number of experts propmt ids"})
+    mixtures: Optional[int] = field(default=3, metadata={"help": "number of experts in the model"})
+    prompt_nums: Optional[int] = field(default=5, metadata={"help": "number of experts propmt ids"})
+    mixture_embedding: Optional[bool] = field(default=False)
     expert_id: Optional[int] = field(default=5e4, metadata={"help": "specify a token as expert token"})
     alpha: Optional[float] = field(default=1)
     beta: Optional[float] = field(default=0.5)

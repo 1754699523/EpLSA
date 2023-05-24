@@ -5,7 +5,6 @@ import copy
 import warnings
 from typing import Optional, Tuple
 import math
-from sources.moe import StransE
 import torch
 import random
 import torch.nn.functional as F
