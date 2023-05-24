@@ -160,7 +160,7 @@ class Seq2SeqTrainer(Trainer):
                 cos(tail-entity,rel).mean())
             trance_loss = self.transE_loss(pos_distances, neg_distances)
             loss = loss_fct(logits.view(-1, logits.shape[-1]),
-                    labels.view(-1))  + self.config.alpha*cos_loss+ self.config.beta*trance_loss
+                    labels.view(-1))  + self.data_args.alpha*cos_loss+ self.data_args.beta*trance_loss
             list_cos_loss.append(cos_loss.item())
             list_transe_loss.append(trance_loss.item())
             list_loss.append(loss.item())
