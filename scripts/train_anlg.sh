@@ -20,8 +20,7 @@ option="
     --alpha 1
     --beta 0.5
     --do_train 
-    --do_eval 
-    --do_predict 
+    --do_eval
     --eval_beams 3 
     --per_device_train_batch_size 15
     --per_device_eval_batch_size 15
@@ -32,7 +31,7 @@ option="
     --evaluate_during_training
 "
 
-cmd="python main.py ${option}"
+cmd="python3 main.py ${option}"
 
 echo $cmd
 eval $cmd

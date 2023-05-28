@@ -20,8 +20,7 @@ option="
     --alpha 0.4
     --beta 0.4
     --do_train 
-    --do_eval 
-    --do_predict 
+    --do_eval
     --eval_beams 3 
     --per_device_train_batch_size 15
     --per_device_eval_batch_size 15
