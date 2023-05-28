@@ -10,9 +10,7 @@ from transformers import (
     TrainingArguments,
     set_seed,
 )
-print(1)
 from evals.eval_acc_div import eval_accuracy_diversity
-print(2)
 from transformers.trainer_utils import EvaluationStrategy
 from trainers.trainer_utils import (
     assert_all_frozen,
@@ -198,7 +196,7 @@ def main():
             tokenizer=tokenizer,
             type_path="val",
             data_dir=data_args.data_dir,
-            n_obs=data_args.n_val,  
+            n_obs=data_args.n_val,
             max_target_length=data_args.val_max_target_length,
             max_source_length=data_args.max_source_length,
             prefix=model.config.prefix or "",
@@ -248,7 +246,7 @@ def main():
 
         with open(out_pred_path, 'w') as eval_out:
             for pred in predictions:
-                output_line = tokenizer.decode(pred, 
+                output_line = tokenizer.decode(pred,
                         skip_special_tokens=True, clean_up_tokenization_spaces=False)
                 eval_out.write(output_line + '\n')
 
