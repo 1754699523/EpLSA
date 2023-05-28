@@ -88,7 +88,6 @@ class DataTrainingArguments:
     beta: Optional[float] = field(default=0.5)
 
 def main():
-    print(3)
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
 
     if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):

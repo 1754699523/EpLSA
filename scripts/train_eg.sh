@@ -25,7 +25,7 @@ option="
     --eval_beams 3 
     --per_device_train_batch_size 15
     --per_device_eval_batch_size 15
-    --metric_for_best_model topk_bleu_4
+    --metric_for_best_model self_bleu_4
     --predict_with_generate 
     --load_best_model_at_end 
     --overwrite_output_dir 
