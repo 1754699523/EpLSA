@@ -228,21 +228,6 @@ def main():
         if training_args.do_eval or training_args.evaluation_strategy != EvaluationStrategy.NO
         else None
     )
-
-    test_dataset = (
-        LegacySeq2SeqDataset(
-            tokenizer=tokenizer,
-            type_path="test",
-            data_dir=data_args.data_dir,
-            n_obs=data_args.n_test,
-            max_target_length=data_args.test_max_target_length,
-            max_source_length=data_args.max_source_length,
-            prefix=model.config.prefix or "",
-        )
-        if training_args.do_predict
-        else None
-    )
-
     trainer = Seq2SeqTrainer(
         model=model,
         config=config,

@@ -8,7 +8,7 @@ OUTPUT_DIR=${}
 
 option="
     --data_dir data/anlg
-    --model_name_or_path facebook/bart-base
+    --model_name_or_path anlg
     --model_type moe
     --output_dir anlg
     --max_source_length 40
