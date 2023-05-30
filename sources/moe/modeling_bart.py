@@ -146,7 +146,7 @@ class BartMoEModel(PretrainedBartModel):
         )
         decoder_outputs = self.decoder(
             decoder_input_ids,
-            encoder_outputs[0] + pos_sent_outputs[0]*1,
+            encoder_outputs[0] + pos_sent_outputs[0],
             attention_mask,
             decoder_padding_mask,
             decoder_causal_mask=causal_mask,
@@ -157,7 +157,7 @@ class BartMoEModel(PretrainedBartModel):
             return_dict=return_dict,
         )
         if not return_dict:
-            return decoder_outputs + pos_sent_outputs + encoder_target_outputs + pos_sent_outputs+encoder_outputs
+            return decoder_outputs + pos_sent_outputs + encoder_target_outputs +encoder_outputs
         return Seq2SeqModelOutput(
             last_hidden_state=decoder_outputs.last_hidden_state,
             past_key_values=decoder_outputs.past_key_values,

@@ -207,7 +207,7 @@ class Seq2SeqTrainer(Trainer):
             outputs = model(**inputs, use_cache=False)
             x = outputs[0]
             loss = self._compute_loss(logits=outputs[1], encoder_outputs=outputs[2], encoder_sent_outputs=outputs[3],
-                                      encoder_target_outputs=outputs[4], sent_outputs=outputs[5], labels=labels_out,
+                                      encoder_target_outputs=outputs[4], labels=labels_out,
                                       input_ids=inputs["input_ids"])
             # loss = self._compute_loss(outputs[1], labels_out)
             loss = loss.mean().item()

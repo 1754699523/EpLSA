@@ -78,7 +78,7 @@ class MoESeq2SeqTrainer(Seq2SeqTrainer):
         outputs = model(**inputs, use_cache=False)
         logits = outputs[0]
         return self._compute_loss(logits=logits, encoder_outputs=outputs[1], encoder_sent_outputs=outputs[2],
-                                  encoder_target_outputs=outputs[3], sent_outputs=outputs[4], labels=labels,
+                                  encoder_target_outputs=outputs[3], labels=labels,
                                   input_ids=input_ids)
 
     def compute_mixture_ids(self, model, inputs):

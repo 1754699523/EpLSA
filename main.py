@@ -122,18 +122,9 @@ def main():
         model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
     from trainers.trainer_utils import LegacySeq2SeqDataset, Seq2SeqDataCollator
-    if model_args.model_type == 'moe':
-        from transformers import BartConfig
-        from sources.moe.modeling_bart import BartMoEForConditionalGeneration as BartModel
-        from trainers.moe_trainer import MoESeq2SeqTrainer as Seq2SeqTrainer
-    elif model_args.model_type == 'sampling':
-        from transformers import BartConfig
-        from sources.no_moe.modeling_bart import BartMoEForConditionalGeneration as BartModel
-        from trainers.ori import OriSeq2SeqTrainer as Seq2SeqTrainer
-    else:
-        raise NotImplementedError(
-            f"model type ({model_args.model_type}) has not been implemented or the name model type is incorrect."
-        )
+    from transformers import BartConfig
+    from sources.moe.modeling_bart import BartMoEForConditionalGeneration as BartModel
+    from trainers.moe_trainer import MoESeq2SeqTrainer as Seq2SeqTrainer
     from transformers import BartTokenizer
     # n_sample for evluating the models during training
     training_args.eval_beams = data_args.eval_beams
