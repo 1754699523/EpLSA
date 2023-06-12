@@ -23,18 +23,6 @@ Inference
 ```
 bash  scripts/predict.sh
 ```
- 
-### And coding style tests
- 
-Explain what these tests test and why
- 
-```
-Give an example
-```
- 
-
-
-## Contributing
- To reproduce our results, you can directly download our [checkpoints](https://drive.google.com/drive/folders/1J1UscMYsO0ieqUzOn4y3DbjyzyLyhUN6?usp=drive_link) and evaluate the model.
+To reproduce our results, you can directly download our [checkpoints](https://drive.google.com/drive/folders/1J1UscMYsO0ieqUzOn4y3DbjyzyLyhUN6?usp=drive_link) and evaluate the model.
 
  
