@@ -20,9 +20,4 @@ bash  scripts/train_anlg.sh
 
 Inference
  
-```
-bash  scripts/predict.sh
-```
-To reproduce our results, you can directly download our [checkpoints](https://drive.google.com/drive/folders/1J1UscMYsO0ieqUzOn4y3DbjyzyLyhUN6?usp=drive_link) and evaluate the model.
-
- 
+``
