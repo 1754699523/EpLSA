@@ -35,25 +35,35 @@ class MoESeq2SeqTrainer(Seq2SeqTrainer):
         # input_ids:batch_size*length
         inputs = self._prepare_inputs(inputs)
 
-        mixture_ids_prompt = self.expert_prompt.repeat(inputs['input_ids'].shape[0], 1).to(self.args.device)
-        mixture_att_prompt = torch.full(mixture_ids_prompt.shape, 1).to(self.args.device)
+        if self.mixture_embedding:
+            mixture_ids = torch.arange(self.mixtures, dtype=torch.long, device=inputs['input_ids'].device).view(
+                self.mixtures, 1).repeat(inputs['input_ids'].shape)
+            mixture_inputs = {k: self.repeat(v, self.mixtures) for k, v in inputs.items()}
+            mixture_inputs['mixture_ids'] = mixture_ids
+            model.eval()
+            mixture_ids = self.compute_mixture_ids(model, mixture_inputs)
+            inputs['mixture_ids'] = mixture_ids.expand(inputs['input_ids'].shape)
 
-        mixture_inputs = {k: self.repeat(v, self.mixtures) for k, v in inputs.items()}
-        mixture_inputs['input_ids'] = torch.cat([mixture_ids_prompt, mixture_inputs['input_ids']], dim=1)
-        mixture_inputs['attention_mask'] = torch.cat([mixture_att_prompt, mixture_inputs['attention_mask']], dim=1)
+        else:  # using prompt as different expert
+            mixture_ids_prompt = self.expert_prompt.repeat(inputs['input_ids'].shape[0], 1).to(self.args.device)
+            mixture_att_prompt = torch.full(mixture_ids_prompt.shape, 1).to(self.args.device)
 
-        model.eval()
-        mixture_ids = self.compute_mixture_ids(model, mixture_inputs)
-        expanded_mixture_ids = mixture_ids.expand(self.B, self.data_args.prompt_nums).unsqueeze(dim=1)
-        input_ids_prompt = torch.gather(mixture_ids_prompt.view(
+            mixture_inputs = {k: self.repeat(v, self.mixtures) for k, v in inputs.items()}
+            mixture_inputs['input_ids'] = torch.cat([mixture_ids_prompt, mixture_inputs['input_ids']], dim=1)
+            mixture_inputs['attention_mask'] = torch.cat([mixture_att_prompt, mixture_inputs['attention_mask']], dim=1)
+
+            model.eval()
+            mixture_ids = self.compute_mixture_ids(model, mixture_inputs)
+            expanded_mixture_ids = mixture_ids.expand(self.B, self.data_args.prompt_nums).unsqueeze(dim=1)
+            input_ids_prompt = torch.gather(mixture_ids_prompt.view(
                 self.B, self.mixtures, -1), dim=1, index=expanded_mixture_ids).squeeze()
-        attention_prompt = torch.full(input_ids_prompt.shape, 1).to(self.args.device)
-        inputs['input_ids'] = torch.cat([input_ids_prompt, inputs['input_ids']], dim=1)
-        inputs['attention_mask'] = torch.cat([attention_prompt, inputs['attention_mask']], dim=1)
+            attention_prompt = torch.full(input_ids_prompt.shape, 1).to(self.args.device)
+            inputs['input_ids'] = torch.cat([input_ids_prompt, inputs['input_ids']], dim=1)
+            inputs['attention_mask'] = torch.cat([attention_prompt, inputs['attention_mask']], dim=1)
 
         # do the expert training!
         model.train()
-        loss = self.compute_loss(model,inputs)
+        loss = self.compute_loss(model, inputs)
 
         # if self.args.n_gpu > 1:
         #     loss = loss.mean()  # mean() to average on multi-gpu parallel training

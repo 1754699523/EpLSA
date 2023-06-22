@@ -157,7 +157,7 @@ class BartMoEModel(PretrainedBartModel):
             return_dict=return_dict,
         )
         if not return_dict:
-            return decoder_outputs + pos_sent_outputs + encoder_target_outputs +encoder_outputs
+            return decoder_outputs + pos_sent_outputs + encoder_target_outputs+encoder_outputs
         return Seq2SeqModelOutput(
             last_hidden_state=decoder_outputs.last_hidden_state,
             past_key_values=decoder_outputs.past_key_values,

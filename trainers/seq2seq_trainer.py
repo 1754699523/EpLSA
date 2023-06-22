@@ -126,7 +126,7 @@ class Seq2SeqTrainer(Trainer):
         ones = torch.tensor([-1], dtype=torch.long).to(pos_distances.device)
         return self.criterion(pos_distances, neg_distances, ones)
 
-    def _compute_loss(self, logits, encoder_outputs, encoder_sent_outputs, encoder_target_outputs, sent_outputs, labels,
+    def _compute_loss(self, logits, encoder_outputs, encoder_sent_outputs, encoder_target_outputs,labels,
                       input_ids):
         if self.args.label_smoothing == 0:
             # logits:batch_size*seq_len*vocab
@@ -155,7 +155,7 @@ class Seq2SeqTrainer(Trainer):
             tail = self.dropout(tail).to(entity.device)
             pos_distances = self._distance(entity, rel , tail)
             neg_distances = self._distance(entity-entity, rel - rel, entity-entity)
-            # rel控制
+
             cos_loss = 1 - (
                 cos(tail-entity,rel).mean())
             trance_loss = self.transE_loss(pos_distances, neg_distances)
@@ -209,7 +209,6 @@ class Seq2SeqTrainer(Trainer):
             loss = self._compute_loss(logits=outputs[1], encoder_outputs=outputs[2], encoder_sent_outputs=outputs[3],
                                       encoder_target_outputs=outputs[4], labels=labels_out,
                                       input_ids=inputs["input_ids"])
-            # loss = self._compute_loss(outputs[1], labels_out)
             loss = loss.mean().item()
             if self.args.prediction_loss_only:
                 return (loss, None, None)
