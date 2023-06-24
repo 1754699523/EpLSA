@@ -19,5 +19,6 @@ bash  scripts/train_anlg.sh
 ```
 
 Inference
- 
-``
+```
+bash  scripts/predict.sh
+```
