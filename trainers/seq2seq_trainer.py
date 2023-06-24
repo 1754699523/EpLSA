@@ -87,7 +87,7 @@ list_transe_loss = []
 list_loss = []
 list_rel_cos_loss  = []
 from torch.utils.tensorboard import SummaryWriter
-writer = SummaryWriter("runs/tt10101p95")
+writer = SummaryWriter("runs/l")
 class Seq2SeqTrainer(Trainer):
     def __init__(self, config, data_args, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -119,10 +119,8 @@ class Seq2SeqTrainer(Trainer):
     def _distance(self, ent, rel, tail):
         dist = ent+rel - tail  # [batch, embed_dim]
         return torch.norm(dist, p=self.norm, dim=1)
-    def _rotate_distance(self, ent, rel, tail):
-        dist = ent*rel - tail  # [batch, embed_dim]
-        return torch.norm(dist, p=self.norm, dim=1)
-    def transE_loss(self, pos_distances, neg_distances):
+    def Ada_loss(self, pos_distances, neg_distances):
+        #neg_distances are zeros,so Ada_loss is max(0,lambda+pos_distances)
         ones = torch.tensor([-1], dtype=torch.long).to(pos_distances.device)
         return self.criterion(pos_distances, neg_distances, ones)
 
@@ -134,41 +132,32 @@ class Seq2SeqTrainer(Trainer):
             assert logits.shape[-1] == self.vocab_size
             cos = torch.nn.CosineSimilarity()
             eos_mask = input_ids.eq(self.config.eos_token_id)
-            entity = encoder_outputs[eos_mask, :].view(encoder_outputs.size(0), -1,
-                                                     encoder_outputs.size(-1))[:, -1, :]
+            LT_X = encoder_outputs[eos_mask, :].view(encoder_outputs.size(0), -1,
+                                                    encoder_outputs.size(-1))[:, -1, :]
             encoder_outputss = encoder_outputs + encoder_sent_outputs
-            s = encoder_outputss[eos_mask, :].view(encoder_outputs.size(0), -1,
-                                              encoder_outputs.size(-1))[:, -1, :]
-            rel = encoder_sent_outputs[:, 0, :]
+            TT = encoder_sent_outputs[:, 0, :]
             label_mask = labels.eq(self.config.eos_token_id)
-            tail = encoder_target_outputs[label_mask, :].view(encoder_target_outputs.size(0), -1,
+            LT_Y = encoder_target_outputs[label_mask, :].view(encoder_target_outputs.size(0), -1,
                                                               encoder_target_outputs.size(-1))[:, -1, :]
-            self.dropout = self.dropout.to(entity.device)
-            self.dense = self.dropout.to(entity.device)
-            entity = self.dropout(entity).to(entity.device)
-            entity = self.dense(entity).to(entity.device)
-            entity = torch.tanh(entity).to(entity.device)
-            entity = self.dropout(entity).to(entity.device)
-            tail = self.dropout(tail).to(entity.device)
-            tail = self.dense(tail).to(entity.device)
-            tail = torch.tanh(tail).to(entity.device)
-            tail = self.dropout(tail).to(entity.device)
-            pos_distances = self._distance(entity, rel , tail)
-            neg_distances = self._distance(entity-entity, rel - rel, entity-entity)
+            self.dropout = self.dropout.to(LT_X.device)
+            self.dense = self.dropout.to(LT_X.device)
+            LT_X = self.dropout(LT_X).to(LT_X.device)
+            LT_X = self.dense(LT_X).to(LT_X.device)
+            LT_X = torch.tanh(LT_X).to(LT_X.device)
+            LT_X = self.dropout(LT_X).to(LT_X.device)
+            LT_Y = self.dropout(LT_Y).to(LT_X.device)
+            LT_Y = self.dense(LT_Y).to(LT_X.device)
+            LT_Y = torch.tanh(LT_Y).to(LT_X.device)
+            LT_Y = self.dropout(LT_Y).to(LT_X.device)
+            pos_distances = self._distance(LT_X, TT, LT_Y)
+            neg_distances = self._distance(LT_X - LT_X, TT - TT, LT_X - LT_X)
 
-            cos_loss = 1 - (
-                cos(tail-entity,rel).mean())
-            trance_loss = self.transE_loss(pos_distances, neg_distances)
+            Task_loss = 1 - (
+                cos(LT_Y - LT_X, TT).mean())
+
+            Ada_loss = self.Ada_loss(pos_distances, neg_distances)
             loss = loss_fct(logits.view(-1, logits.shape[-1]),
-                    labels.view(-1))  + self.data_args.alpha*cos_loss+ self.data_args.beta*trance_loss
-            list_cos_loss.append(cos_loss.item())
-            list_transe_loss.append(trance_loss.item())
-            list_loss.append(loss.item())
-            if len(list_cos_loss) % 1000 == 0:
-                for i in range(len(list_cos_loss)):
-                   writer.add_scalars('loss', {'cos_loss': 1*list_cos_loss[i]}, i)
-                   writer.add_scalars('loss',{"transe_loss":2*list_transe_loss[i]}, i)
-                   writer.add_scalars('loss', {"loss":list_loss[i]}, i)
+                    labels.view(-1)) + self.data_args.alpha*Task_loss + self.data_args.beta*Ada_loss
         else:
             lprobs = torch.nn.functional.log_softmax(logits, dim=-1)
             loss, _ = label_smoothed_nll_loss(

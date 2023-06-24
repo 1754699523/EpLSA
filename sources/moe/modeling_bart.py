@@ -61,7 +61,7 @@ class BartMoEModel(PretrainedBartModel):
         self.shared = nn.Embedding(vocab_size, config.d_model, padding_idx)
         self.encoder = BartEncoder(config, self.shared)
         self.decoder = BartDecoder(config, self.shared)
-        self.sent_encoder = BartSentEncoder(config, self.shared)
+        self.TaskAdapter = TaskAdapter(config, self.shared)
         self.mixture_embeddings = nn.Embedding(config.mixtures, config.d_model, padding_idx=None)
         self.encoder.mixture_embeddings = self.mixture_embeddings
         self.init_weights()
@@ -137,7 +137,7 @@ class BartMoEModel(PretrainedBartModel):
             return_dict=return_dict,
         )
 
-        pos_sent_outputs = self.sent_encoder(
+        pos_sent_outputs = self.TaskAdapter(
             input_ids=encoder_outputs[0][:, 0],
             output_attentions=output_attentions,
             output_hidden_states=output_hidden_states,
@@ -276,7 +276,7 @@ class BartEncoder(nn.Module):
         return BaseModelOutput(last_hidden_state=x, hidden_states=encoder_states, attentions=all_attentions)
 
 
-class BartSentEncoder(nn.Module):
+class TaskAdapter(nn.Module):
     """
     Transformer encoder consisting of *config.encoder_layers* self attention layers. Each layer
     is a :class:`EncoderLayer`.
@@ -487,7 +487,7 @@ class BartMoEForConditionalGeneration(PretrainedBartModel):
         return self.model.encoder
 
     def get_sentEncoder(self):
-        return self.model.sent_encoder
+        return self.model.TaskAdapter
 
     def get_output_embeddings(self):
         return _make_linear_from_emb(self.model.shared)  # make it on the fly
