@@ -13,11 +13,19 @@ psutil==5.9.0
 
  
 Training
- 
+The optimal parameters are provided in the script
+Training anlg dataset
 ```
 bash  scripts/train_anlg.sh
 ```
-
+Training eg dataset
+```
+bash  scripts/train_eg.sh
+```
+Training seg dataset
+```
+bash  scripts/train_seg.sh
+```
 Inference
 ```
 bash  scripts/predict.sh
