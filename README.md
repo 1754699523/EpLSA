@@ -26,8 +26,9 @@ Training seg dataset
 ```
 bash  scripts/train_seg.sh
 ```
-Inference
 [We will provide our trained checkpoints](https://www.runoob.com)
+Inference
+
 ```
 bash  scripts/predict.sh
 ```
