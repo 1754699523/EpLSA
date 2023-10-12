@@ -24,7 +24,7 @@ Training seg dataset
 ```
 bash  scripts/train_seg.sh
 ```
-[We will provide our trained checkpoints]()
+We will provide our trained checkpoints.
 
 Inference
 
