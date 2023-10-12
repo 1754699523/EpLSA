@@ -9,7 +9,7 @@ spacy==2.2.1
 psutil==5.9.0
 
 ```
-这是一个链接 [菜鸟教程](https://www.runoob.com)
+
 
  
 Training
@@ -27,6 +27,7 @@ Training seg dataset
 bash  scripts/train_seg.sh
 ```
 Inference
+[We will provide our trained checkpoints](https://www.runoob.com)
 ```
 bash  scripts/predict.sh
 ```
