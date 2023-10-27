@@ -16,6 +16,9 @@ option="
     --val_max_target_length 40
     --test_max_target_length 40
     --do_predict
+    --do_sample
+    --top_p 0.95
+    --do_eval
     --eval_beams 3
     --per_device_train_batch_size 15
     --per_device_eval_batch_size 15
