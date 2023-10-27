@@ -18,6 +18,8 @@ option="
     --num_train_epochs 30
     --learning_rate 3e-5
     --alpha 0.1
+    --do_sample
+    --top_p 0.95
     --beta 0.1
     --do_train 
     --do_eval
