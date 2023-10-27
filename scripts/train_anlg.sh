@@ -16,6 +16,8 @@ option="
     --val_max_target_length 40
     --test_max_target_length 40
     --num_train_epochs 30
+    --do_sample
+    --top_p 0.95
     --learning_rate 3e-5
     --alpha 1
     --beta 0.5
