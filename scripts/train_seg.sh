@@ -19,6 +19,8 @@ option="
     --learning_rate 3e-5
     --alpha 0.4
     --beta 0.4
+    --do_sample
+    --top_p 0.95
     --do_train 
     --do_eval
     --eval_beams 3 
