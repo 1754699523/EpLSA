@@ -40,6 +40,8 @@ The best hyperparameters setting of EpLSA on three tasks.
 
 
 **Case Study**
+
+
 We provide some test cases on three dataset.
 In the example of abductive commonsense reasoning,  we aim to generate explanatory hypotheses when two observations are given: $O_{1}$ is the cause and $O_{2}$ is the effect. In this case, the semantic context of the $O_{1}$ and $O_{2}$ is that a cabinet is handmade. From the examples in Table \ref{tab_demo_anlgcase}, we can see EpLSA generates assumptions that include not only making it by hand yourself but also hiring professionals to do it, which is consistent with the contextual semantics and is highly diverse. The other methods appear to be heavily repetitive and frequently involve purchases.
 
