@@ -34,7 +34,7 @@ bash  scripts/predict.sh
 The best hyperparameters setting of EpLSA on three tasks.
 | Task      | $\alpha$ | $\beta$ | $\lambda$ |
 |-----------|----------|---------|-----------|
-| $\beta$ NLG | 1      | 0.5     | 2         |
+| $\alpha$ NLG | 1      | 0.5     | 2         |
 | EG        | 0.05   | 0.05    | 2         |
 | SEG       | 0.4    | 0.4     | 2         |
 
