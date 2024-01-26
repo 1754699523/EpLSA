@@ -32,9 +32,9 @@ Inference
 bash  scripts/predict.sh
 ```
 The best hyperparameters setting of EpLSA on three tasks.
-| Task      | &alpha | $\beta$ | $\lambda$ |
+| Task      | $\alpha$ | $\beta$ | $\lambda$ |
 |-----------|----------|---------|-----------|
-| &alpha NLG | 1      | 0.5     | 2         |
+| $\beta$ NLG | 1      | 0.5     | 2         |
 | EG        | 0.05   | 0.05    | 2         |
 | SEG       | 0.4    | 0.4     | 2         |
 
